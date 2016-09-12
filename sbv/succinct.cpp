@@ -83,8 +83,12 @@ uint64_t SuccinctBitVector::rank(uint32_t idx, const bool bit) const {
   0 : smallBlock_tab[pos / SMALL_BLOCK_SIZE - 1];
   uint64_t remain = popcount64(v[pos / ONE_BLOCK_SIZE] << (ONE_BLOCK_SIZE - idx % ONE_BLOCK_SIZE));
 
+<<<<<<< HEAD
   uint64_t r = lblock + sblock + remain;
   return bit ? r : length - r;
+=======
+  return lblock + sblock + remain;
+>>>>>>> 4588db699992e08b12d8010826253239b34b4593
   #endif
 }
 
@@ -136,10 +140,14 @@ void SuccinctBitVector::setBit(uint32_t target, const bool bit){
 }
 
 bool SuccinctBitVector::getBit(const uint32_t target) const {
+<<<<<<< HEAD
   uint64_t l = target / ONE_BLOCK_SIZE;
   uint64_t s = target % ONE_BLOCK_SIZE;
   uint64_t m = 0x1ULL << s;
   return v[l] & m;
+=======
+  return (v[target / ONE_BLOCK_SIZE] >> (target % ONE_BLOCK_SIZE)) & 1LL;
+>>>>>>> 4588db699992e08b12d8010826253239b34b4593
 }
 
 void SuccinctBitVector::build(){

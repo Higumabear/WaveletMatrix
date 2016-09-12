@@ -50,6 +50,7 @@ namespace kuma {
     uint32_t k = idx;
     uint32_t ans = 0;
     for(int i = BIT_SIZE - 1; i >= 0; i--){
+<<<<<<< HEAD
       cout << i << " " << k << " ";
       if(sbv[i]->getBit(k)){
 	cout << "1だ" << endl;
@@ -57,6 +58,12 @@ namespace kuma {
 	k = sbv[i]->rank(k, 1) + sbv[i]->rank(length, 1);
       }else{
 	cout << "0だ" << endl;
+=======
+      if(sbv[i]->getBit(k)){
+	ans |= 1 << i;
+	k = sbv[i]->rank(k, 1) + length - sbv[i]->rank(length, 1);/*ここ直せ*/
+      }else{
+>>>>>>> 4588db699992e08b12d8010826253239b34b4593
 	k = length - sbv[i]->rank(k, 1); /*ここも直せ*/
       }
     }
