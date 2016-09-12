@@ -1,4 +1,4 @@
-#include "sbv/succinct.h"
+#include "../sbv/succinct.h"
 #include <string.h>
 #include <stdint.h>
 
@@ -10,7 +10,11 @@ namespace kuma {
   public:
     WaveletMatrix();
     WaveletMatrix(string s);
+    ~WaveletMatrix(){
+      delete [] sbv; sbv = NULL;
+    }
 
+    uint32_t access(const uint32_t idx);
     uint32_t rank(const uint32_t idx, uint8_t c);
     uint32_t select(const uint32_t b, uint8_t c);
     uint32_t getSize(){ return length; }

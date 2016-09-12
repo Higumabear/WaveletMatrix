@@ -1,38 +1,34 @@
 #include <vector>
-//#include <stdint.h>
+#include <stdint.h>
 
 using namespace std;
 
-typedef unsigned long long uint64;
-typedef unsigned int uint32;
-typedef unsigned char uint8;
-
-const uint32 LARGE_BLOCK_SIZE = 256;
-const uint32 SMALL_BLOCK_SIZE = 64;
-const uint32 ONE_BLOCK_SIZE = SMALL_BLOCK_SIZE;
+const uint32_t LARGE_BLOCK_SIZE = 256;
+const uint32_t SMALL_BLOCK_SIZE = 64;
+const uint32_t ONE_BLOCK_SIZE = SMALL_BLOCK_SIZE;
 
 class SuccinctBitVector{
 
 public:
   SuccinctBitVector();
-  SuccinctBitVector(uint32 n, uint32 bit = 0);
+  SuccinctBitVector(uint32_t n, bool bit = false);
 
-  uint64 rank(uint64 idx) const {return rank(idx, 1);}
-  uint64 rank(uint64 idx, const uint32 bit) const;
-  uint64 select(uint32 b, uint32 bit);
-  uint64 get() const { return vectorSize; }
-  void setBit(uint32 target, const uint32 bit);
+  uint64_t rank(uint32_t idx, const bool bit = true) const;
+  uint64_t select(const uint32_t b, bool bit = true) const;
+  uint64_t getSize() const { return vectorSize; }
+  void setBit(const uint32_t target, const bool bit = true);
+  bool getBit(const uint32_t target) const;
   void build();
 
-  vector<uint64> getv(){return v;}
+  vector<uint64_t> getv(){return v;}
   vector<int> getlb(){return largeBlock_tab;}
   vector<int> getsb(){return smallBlock_tab;}
 
 private:
 
-  std::vector<uint64> v;
+  std::vector<uint64_t> v;
   std::vector<int> largeBlock_tab, smallBlock_tab;
-  uint32 length;
-  uint32 vectorSize;
-  uint32 largeBlockSize, smallBlockSize;
+  uint32_t length;
+  uint32_t vectorSize;
+  uint32_t largeBlockSize, smallBlockSize;
 };
