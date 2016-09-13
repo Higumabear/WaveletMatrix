@@ -3,9 +3,12 @@
 
 int main(int argc, char **argv){
   string s("476532101417");
+  //s = "abcdefghijklmnopqrstuvwxyz";
   kuma::WaveletMatrix wm(s);
   wm.build();
 
   int i;
-  while(cin >> i) cout << wm.access(i) << endl;
+  while(cin >> i) {
+    cout << (char)wm.access(i) << endl;
+  }
 }

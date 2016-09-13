@@ -54,7 +54,7 @@ namespace kuma {
       if(sbv[i]->getBit(k)){
 	cout << "1だ" << endl;
 	ans |= 1 << i;
-	k = sbv[i]->rank(k, 1) + sbv[i]->rank(length, 1);
+	k = sbv[i]->rank(k, 1) + sbv[i]->rank(length, 0);
       }else{
 	cout << "0だ" << endl;
 	k = sbv[i]->rank(k, 0); /*ここも直せ*/
