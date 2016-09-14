@@ -12,10 +12,6 @@ namespace kuma {
 
   WaveletMatrix::WaveletMatrix(string s) : text(s) {
     length = text.length();
-
-    // sbv = new SuccinctBitVector*[BIT_SIZE];
-    // for(int i = 0; i < BIT_SIZE; i++)
-    //   sbv[i] = new SuccinctBitVector(length, 0);
     sbv.assign(BIT_SIZE, SuccinctBitVector(length, 0));
   }
 
@@ -56,5 +52,20 @@ namespace kuma {
       }
     }
     return ans;
+  }
+  
+  uint32_t WaveletMatrix::rank(const uint32_t idx, uint8_t c){
+    uint32_t l = 0, r = idx;
+    for(int i = BIT_SIZE - 1; i >= 0; i--){
+      bool bit = c >> i & 1;
+      if(bit){
+	l = sbv[i].rank(length, bit);
+	r = l + sbv[i].rank(r, bit);
+      }else{
+	l = sbv[i].rank(l, bit);
+	r = sbv[i].rank(r, bit);
+      }
+    }
+    return sbv[0].rank(r, c & 1) - sbv[0].rank(l, c & 1);
   }
 }
