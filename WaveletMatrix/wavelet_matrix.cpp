@@ -13,9 +13,10 @@ namespace kuma {
   WaveletMatrix::WaveletMatrix(string s) : text(s) {
     length = text.length();
 
-    sbv = new SuccinctBitVector*[BIT_SIZE];
-    for(int i = 0; i < BIT_SIZE; i++)
-    sbv[i] = new SuccinctBitVector(length, 0);
+    // sbv = new SuccinctBitVector*[BIT_SIZE];
+    // for(int i = 0; i < BIT_SIZE; i++)
+    //   sbv[i] = new SuccinctBitVector(length, 0);
+    sbv.assign(BIT_SIZE, SuccinctBitVector(length, 0));
   }
 
   void WaveletMatrix::build(){
@@ -25,14 +26,17 @@ namespace kuma {
 
     for(int i = BIT_SIZE - 1; i >= 0; i--){//construct bit vectors
       for(int l = 0; l < length; l++){
-        if(cur[l] >> i & 1)
-	  sbv[i]->setBit(l, 1);
+        if(cur[l] >> i & 1){
+	  sbv[i].setBit(l, 1);
+	  cout << "1";
+	}else cout << "0";
       }
-      cout << cur << endl;
+      cout << endl;
+      //cout << cur << endl;
       uint32_t pos0 = 0;
 
       /*ここ直せ*/
-      uint32_t pos1 = length - sbv[i]->rank(length, 1);
+      uint32_t pos1 = sbv[i].rank(length, 0);
       cout << "rank : " << pos1 << endl;
       for(int l = 0; l < length; l++){//radix sort
         if(cur[l] >> i & 1) next[pos1++] = cur[l];
@@ -51,13 +55,17 @@ namespace kuma {
     uint32_t ans = 0;
     for(int i = BIT_SIZE - 1; i >= 0; i--){
       cout << i << " " << k << " ";
-      if(sbv[i]->getBit(k)){
-	cout << "1だ" << endl;
+      bool bit = sbv[i].getBit(k);
+      if(bit){
+	cout << "1だ";
 	ans |= 1 << i;
-	k = sbv[i]->rank(k, 1) + sbv[i]->rank(length, 0);
+	//k = sbv[i]->rank(k, 1) + sbv[i]->rank(length, 0);
+	k = sbv[i].rank(k, 1);
+	cout << " -> " << k << endl;
       }else{
-	cout << "0だ" << endl;
-	k = sbv[i]->rank(k, 0); /*ここも直せ*/
+	cout << "0だ";
+	k = sbv[i].rank(k, 0);
+	cout << " -> " << k << endl;
       }
     }
     return ans;

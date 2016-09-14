@@ -3,7 +3,6 @@
 
 int main(int argc, char **argv){
   string s("476532101417");
-  //s = "abcdefghijklmnopqrstuvwxyz";
   kuma::WaveletMatrix wm(s);
   wm.build();
 

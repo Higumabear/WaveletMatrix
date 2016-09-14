@@ -1,4 +1,3 @@
-#pragma once
 #include "succinct.h"
 #include <iostream>
 
@@ -66,16 +65,7 @@ SuccinctBitVector::SuccinctBitVector(uint32_t n, bool bit) : length(n) {
 //[0,idx)までのbit数
 uint64_t SuccinctBitVector::rank(uint32_t idx, const bool bit) const {
   //if(idx > getSize()) { throw "SuccinctBitVector::rank()"; }
-  
-#ifdef NAIVE
-  uint64_t r = 0;
-  for(int i = 0; i < idx; i++){
-    uint32_t wordPos = i / ONE_BLOCK_SIZE;
-    uint32_t pos = (uint32_t)i % ONE_BLOCK_SIZE;
-    if(this.v[wordPos] >> pos & 1) r++;
-  }
-  return r;
-  #else
+
   if(idx <= 0LL) return 0LL;
   uint64_t pos = idx - 1;
   uint64_t lblock = (pos < LARGE_BLOCK_SIZE) ? 0 : largeBlock_tab[pos / LARGE_BLOCK_SIZE - 1];
@@ -85,7 +75,6 @@ uint64_t SuccinctBitVector::rank(uint32_t idx, const bool bit) const {
 
   uint64_t r = lblock + sblock + remain;
   return bit ? r : length - r;
-  #endif
 }
 
 //b+1回目のbitが発生する場所

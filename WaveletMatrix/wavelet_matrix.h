@@ -1,5 +1,6 @@
 #include "../sbv/succinct.h"
 #include <string.h>
+#include <vector>
 #include <stdint.h>
 
 namespace kuma {
@@ -10,9 +11,7 @@ namespace kuma {
   public:
     WaveletMatrix();
     WaveletMatrix(string s);
-    ~WaveletMatrix(){
-      delete [] sbv; sbv = NULL;
-    }
+    ~WaveletMatrix(){}
 
     uint32_t access(const uint32_t idx);
     uint32_t rank(const uint32_t idx, uint8_t c);
@@ -21,7 +20,7 @@ namespace kuma {
     void build();
 
   private:
-    SuccinctBitVector **sbv;
+    vector<SuccinctBitVector> sbv;
     int length;
     string text;
   };

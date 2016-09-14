@@ -33,6 +33,14 @@ int main(int argc, char **argv){
   */
   const int TEST = 1 << 20;
 
+#define TEST2
+#ifdef TEST2
+  SuccinctBitVector sbv(TEST, 1);
+  sbv.build();
+  for(int i = 0; i < 1000000; i++)
+    if(sbv.rank(i, 0) != 0) cout << i << endl;
+#endif
+#ifdef TEST1
   int d = 10000;
   while(d--){
     if(d) cout << d << " cases remain." << endl;
@@ -56,8 +64,8 @@ int main(int argc, char **argv){
 
     int selecttest = ranktest % selectlimit;
 
-    int cnt = count(v.begin(), v.begin() + ranktest, true);
-    int sbvcnt = sbv.rank(ranktest);
+    int cnt = count(v.begin(), v.begin() + ranktest, false);
+    int sbvcnt = sbv.rank(ranktest, 0);
     int sel = simpleselect(v, selecttest);
     int sbvsel = sbv.select(selecttest);
     if(cnt != sbvcnt){
@@ -71,4 +79,5 @@ int main(int argc, char **argv){
       << "   select test val : " << selecttest << endl;
     }
   }
+#endif
 }
