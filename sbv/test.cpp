@@ -37,8 +37,7 @@ int main(int argc, char **argv){
 #ifdef TEST2
   SuccinctBitVector sbv(TEST, 1);
   sbv.build();
-  for(int i = 0; i < 1000000; i++)
-    if(sbv.rank(i, 0) != 0) cout << i << endl;
+  if(sbv.rank(1, 0) != 0) cout << "‚¦‚¦‚¦(LEƒÖEM)" << endl;
 #endif
 #ifdef TEST1
   int d = 10000;

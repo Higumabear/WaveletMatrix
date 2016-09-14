@@ -74,7 +74,7 @@ uint64_t SuccinctBitVector::rank(uint32_t idx, const bool bit) const {
   uint64_t remain = popcount64(v[pos / ONE_BLOCK_SIZE] << (ONE_BLOCK_SIZE - idx % ONE_BLOCK_SIZE));
 
   uint64_t r = lblock + sblock + remain;
-  return bit ? r : length - r;
+  return bit ? r : idx - r;
 }
 
 //b+1回目のbitが発生する場所

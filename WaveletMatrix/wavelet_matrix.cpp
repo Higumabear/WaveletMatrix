@@ -25,24 +25,18 @@ namespace kuma {
     str2uint8_t(cur, text, length);
 
     for(int i = BIT_SIZE - 1; i >= 0; i--){//construct bit vectors
-      for(int l = 0; l < length; l++){
-        if(cur[l] >> i & 1){
+      for(int l = 0; l < length; l++)
+        if(cur[l] >> i & 1)
 	  sbv[i].setBit(l, 1);
-	  cout << "1";
-	}else cout << "0";
-      }
-      cout << endl;
-      //cout << cur << endl;
-      uint32_t pos0 = 0;
 
-      /*ここ直せ*/
+      sbv[i].build();
+
+      uint32_t pos0 = 0;
       uint32_t pos1 = sbv[i].rank(length, 0);
-      cout << "rank : " << pos1 << endl;
       for(int l = 0; l < length; l++){//radix sort
         if(cur[l] >> i & 1) next[pos1++] = cur[l];
 	else next[pos0++] = cur[l];
       }
-      cout << "pos0 : " << pos0 << "  pos1 : " << pos1 << endl;
       swap(cur, next);
     }
 
@@ -54,18 +48,11 @@ namespace kuma {
     uint32_t k = idx;
     uint32_t ans = 0;
     for(int i = BIT_SIZE - 1; i >= 0; i--){
-      cout << i << " " << k << " ";
       bool bit = sbv[i].getBit(k);
+      k = sbv[i].rank(k, bit);
       if(bit){
-	cout << "1だ";
 	ans |= 1 << i;
-	//k = sbv[i]->rank(k, 1) + sbv[i]->rank(length, 0);
-	k = sbv[i].rank(k, 1);
-	cout << " -> " << k << endl;
-      }else{
-	cout << "0だ";
-	k = sbv[i].rank(k, 0);
-	cout << " -> " << k << endl;
+	k += sbv[i].rank(length, 0);
       }
     }
     return ans;
