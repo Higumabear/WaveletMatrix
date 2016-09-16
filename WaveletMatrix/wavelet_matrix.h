@@ -14,6 +14,7 @@ namespace kuma {
     ~WaveletMatrix(){}
 
     uint32_t access(const uint32_t idx);
+    uint32_t rankRange(const uint32_t l, const uint32_t r, uint8_t c);
     uint32_t rank(const uint32_t idx, uint8_t c);
     uint32_t select(const uint32_t b, uint8_t c);
     uint32_t getSize(){ return length; }

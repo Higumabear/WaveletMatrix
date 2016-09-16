@@ -53,19 +53,17 @@ namespace kuma {
     }
     return ans;
   }
-  
-  uint32_t WaveletMatrix::rank(const uint32_t idx, uint8_t c){
-    uint32_t l = 0, r = idx;
+  // [s,e)
+  uint32_t WaveletMatrix::rankRange(const uint32_t s, const uint32_t e, uint8_t c){
+    uint32_t l = s, r = e;
     for(int i = BIT_SIZE - 1; i >= 0; i--){
       bool bit = c >> i & 1;
-      if(bit){
-	l = sbv[i].rank(length, bit);
-	r = l + sbv[i].rank(r, bit);
-      }else{
-	l = sbv[i].rank(l, bit);
-	r = sbv[i].rank(r, bit);
-      }
+      l = sbv[i].rank(l, bit), r = sbv[i].rank(r, bit);
+      if(bit) l += sbv[i].rank(length, 0), r += sbv[i].rank(length, 0);
     }
-    return sbv[0].rank(r, c & 1) - sbv[0].rank(l, c & 1);
+    return r - l;
+  }
+  uint32_t WaveletMatrix::rank(const uint32_t idx, uint8_t c){
+    return rankRange(0, idx, c);
   }
 }

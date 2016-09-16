@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <set>
+#include <string>
+#include <algorithm>
 #include "wavelet_matrix.h"
 
 int main(int argc, char **argv){
@@ -26,11 +28,18 @@ int main(int argc, char **argv){
   }
 #endif
 
+#define RANK
 #ifdef RANK
-  std::set<char> alp(ALL(s));
+  std::set<char> alp(s.begin(), s.end());
   for(auto u : alp){
-    if(count(ALL(s), u) != wm.rank(s.length(), u))
-
+    // cout << u << " is being tested....";
+    // int co = count(s.begin(), s.end(), u);
+    // int wr = 
+      wm.rank(s.length(), u);
+    if(co != wr){
+      cout << "wrong  " << co << "  " << wr;
+    }
+    cout << endl;
   }
 #endif
 }

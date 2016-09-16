@@ -33,8 +33,10 @@ int main(int argc, char **argv){
   std::set<char> alp(s.begin(), s.end());
   for(auto u : alp){
     cout << u << " is being tested....";
-    if(count(s.begin(), s.end(), u) != wm.rank(s.length(), u)){
-      cout << "wrong";
+    int co = count(s.begin(), s.end(), u);
+    int wr = wm.rank(s.length(), u);
+    if(co != wr){
+      cout << "wrong  " << co << "  " << wr;
     }
     cout << endl;
   }
