@@ -40,7 +40,7 @@ namespace kuma {
     delete [] next;
   }
 
-  uint32_t WaveletMatrix::access(const uint32_t idx){
+  uint32_t WaveletMatrix::access(uint32_t idx) const {
     uint32_t k = idx;
     uint32_t ans = 0;
     for(int i = BIT_SIZE - 1; i >= 0; i--){
@@ -54,7 +54,7 @@ namespace kuma {
     return ans;
   }
   // [s,e)
-  uint32_t WaveletMatrix::rankRange(const uint32_t s, const uint32_t e, uint8_t c){
+  uint32_t WaveletMatrix::rankRange(uint8_t c, uint32_t s, uint32_t e) const {
     uint32_t l = s, r = e;
     for(int i = BIT_SIZE - 1; i >= 0; i--){
       bool bit = c >> i & 1;
@@ -63,7 +63,24 @@ namespace kuma {
     }
     return r - l;
   }
-  uint32_t WaveletMatrix::rank(const uint32_t idx, uint8_t c){
-    return rankRange(0, idx, c);
+
+  uint32_t WaveletMatrix::rank(uint8_t c, uint32_t idx) const {
+    return rankRange(c, 0, idx);
+  }
+
+  uint32_t WaveletMatrix::select(uint8_t c, uint32_t b) const {
+    uint32_t pos = 0;
+    for(uint8_t i = 0; i < BIT_SIZE; i++){
+      bool bit = (c >> i) & 1;
+      if(bit) pos = sbv[i].rank(pos, bit) + sbv[i].rank(length, 0);
+      else    pos = sbv[i].rank(pos, bit);
+    }
+    pos += b;
+    for(uint8_t i = BIT_SIZE - 1; i >= 0; i--){
+      bool bit = (c >> i) & 1;
+      if(bit) pos = sbv[i].select(pos - sbv[i].rank(length, 0), bit);
+      else pos = sbv[i].select(pos, bit);
+    }
+    return pos;
   }
 }
