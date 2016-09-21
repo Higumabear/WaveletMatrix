@@ -77,7 +77,6 @@ uint64_t SuccinctBitVector::rank(uint32_t idx, const bool bit) const {
   return bit ? r : idx - r;
 }
 
-//b+1回目のbitが発生する場所
 uint64_t SuccinctBitVector::select(uint32_t b, bool bit) const {
   long long num = b + 1;// num can be negative.
   uint32_t ub = largeBlockSize - 1;
@@ -87,38 +86,70 @@ uint64_t SuccinctBitVector::select(uint32_t b, bool bit) const {
   if(ub != 0){
     while(lb < ub){
       uint32_t mid = (ub + lb) / 2;
-      if(largeBlock_tab[mid] >= num) ub = mid;
+      uint64_t val = bit ? largeBlock_tab[mid] : mid * LARGE_BLOCK_SIZE - largeBlock_tab[mid];
+      if(val >= num) ub = mid;
       else lb = mid + 1;
     }
   }
   uint32_t Lindex = lb;
-
+  uint32_t Sindex = Lindex * LARGE_BLOCK_SIZE / SMALL_BLOCK_SIZE;//SBのインデクスは絶対値
   num -= rank(Lindex * LARGE_BLOCK_SIZE, bit);
-  uint32_t Sindex = Lindex * LARGE_BLOCK_SIZE / SMALL_BLOCK_SIZE;
 
-  //#define DEBUG
-  #ifdef DEBUG
-  std::cout << "Lindex : " << Lindex
-  << "  size : " << largeBlock_tab[Lindex]
-  << " remain : " << num << endl;
-
-  cout << "Small block index first : " << Sindex << endl;
-  #endif
 
   //SBの線形探索 O(LARGE_BLOCK_SIZE / SMALL_BLOCK_SIZE) = O(1)
+  int offset = 0;
   while(1){
-    #ifdef DEBUG
-    cout << Sindex << " -> " << num - smallBlock_tab[Sindex] << endl;
-    #endif
-    if(num <= smallBlock_tab[Sindex]) break;
+    uint64_t val = bit ? smallBlock_tab[Sindex] : (offset + 1) * SMALL_BLOCK_SIZE - smallBlock_tab[Sindex];
+    if(num <= val) break;
     Sindex++;
+    offset++;
   }
-  #ifdef DEBUG
-  cout << "Small block index last : " << Sindex << endl;
-  #endif
   num -= ((Sindex % (LARGE_BLOCK_SIZE / SMALL_BLOCK_SIZE) == 0) ? 0 : smallBlock_tab[Sindex - 1]);
   return Sindex * SMALL_BLOCK_SIZE + select64(v[Sindex], num, bit);
 }
+
+// //b+1回目のbitが発生する場所
+// uint64_t SuccinctBitVector::select(uint32_t b, bool bit) const {
+//   long long num = b + 1;// num can be negative.
+//   uint32_t ub = largeBlockSize - 1;
+//   uint32_t lb = 0;
+
+//   //LBの二分探索 O(log(N / LARGE_BLOCK_SIZE))
+//   if(ub != 0){
+//     while(lb < ub){
+//       uint32_t mid = (ub + lb) / 2;
+//       if(largeBlock_tab[mid] >= num) ub = mid;
+//       else lb = mid + 1;
+//     }
+//   }
+//   uint32_t Lindex = lb;
+
+//   num -= rank(Lindex * LARGE_BLOCK_SIZE, bit);
+//   uint32_t Sindex = Lindex * LARGE_BLOCK_SIZE / SMALL_BLOCK_SIZE;
+
+//   //#define DEBUG
+//   #ifdef DEBUG
+//   std::cout << "Lindex : " << Lindex
+//   << "  size : " << largeBlock_tab[Lindex]
+//   << " remain : " << num << endl;
+
+//   cout << "Small block index first : " << Sindex << endl;
+//   #endif
+
+//   //SBの線形探索 O(LARGE_BLOCK_SIZE / SMALL_BLOCK_SIZE) = O(1)
+//   while(1){
+//     #ifdef DEBUG
+//     cout << Sindex << " -> " << num - smallBlock_tab[Sindex] << endl;
+//     #endif
+//     if(num <= smallBlock_tab[Sindex]) break;
+//     Sindex++;
+//   }
+//   #ifdef DEBUG
+//   cout << "Small block index last : " << Sindex << endl;
+//   #endif
+//   num -= ((Sindex % (LARGE_BLOCK_SIZE / SMALL_BLOCK_SIZE) == 0) ? 0 : smallBlock_tab[Sindex - 1]);
+//   return Sindex * SMALL_BLOCK_SIZE + select64(v[Sindex], num, bit);
+// }
 
 void SuccinctBitVector::setBit(uint32_t target, const bool bit){
   v[target / ONE_BLOCK_SIZE] |= 1LL << (target % ONE_BLOCK_SIZE);

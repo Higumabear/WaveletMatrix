@@ -7,10 +7,10 @@
 
 using namespace std;
 
-int simpleselect(vector<bool> &v, int c){
+int simpleselect(vector<bool> &v, int c, bool bit){
   int idx, cnt = 0;
   for(idx = 0; idx < v.size(); idx++){
-    cnt += v[idx];
+    cnt += ((bit) ? v[idx] : !v[idx]);
     if(cnt == c + 1) break;
   }
   return idx;
@@ -33,7 +33,7 @@ int main(int argc, char **argv){
   */
   const int TEST = 1 << 20;
 
-#define TEST2
+#define TEST1
 #ifdef TEST2
   SuccinctBitVector sbv(TEST, 1);
   sbv.build();
@@ -41,6 +41,7 @@ int main(int argc, char **argv){
 #endif
 #ifdef TEST1
   int d = 10000;
+  const bool bit = true;
   while(d--){
     if(d) cout << d << " cases remain." << endl;
 
@@ -49,7 +50,7 @@ int main(int argc, char **argv){
 
     int ranktest;
     int selectlimit = 0;
-    srand(ranktest);
+    srand(d);
     for(int i = 0; i < TEST; i++){
       int r = rand();
       selectlimit += (r % 2 == 1);
@@ -59,14 +60,14 @@ int main(int argc, char **argv){
     sbv.build();
 
 
-    ranktest = TEST / RAND_MAX * rand();
+    ranktest = TEST * 1.0 / RAND_MAX * rand();
 
     int selecttest = ranktest % selectlimit;
 
-    int cnt = count(v.begin(), v.begin() + ranktest, false);
-    int sbvcnt = sbv.rank(ranktest, 0);
-    int sel = simpleselect(v, selecttest);
-    int sbvsel = sbv.select(selecttest);
+    int cnt = count(v.begin(), v.begin() + ranktest, bit);
+    int sbvcnt = sbv.rank(ranktest, bit);
+    int sel = simpleselect(v, selecttest, bit);
+    int sbvsel = sbv.select(selecttest, bit);
     if(cnt != sbvcnt){
       cout << "cnt : " << cnt
       << "   sbvcnt : " << sbvcnt
