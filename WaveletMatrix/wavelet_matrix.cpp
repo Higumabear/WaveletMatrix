@@ -11,8 +11,8 @@ namespace kuma {
   WaveletMatrix::WaveletMatrix(){}
 
   WaveletMatrix::WaveletMatrix(string s) : text(s) {
-    length = text.length();
-    sbv.assign(BIT_SIZE, SuccinctBitVector(length, 0));
+    length = s.length();
+    sbv.assign(BIT_SIZE, SuccinctBitVector(length, false));
   }
 
   void WaveletMatrix::build(){

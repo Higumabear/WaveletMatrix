@@ -60,7 +60,7 @@ int main(int argc, char **argv){
 #ifdef SELECT
   int L = s.length();
   std::map<uint8_t, int> con;
-  wm.select((uint8_t)' ', 10);
+  ///wm.select((uint8_t)' ', 10);
   for(int i = 0; i < L; i++) con[s[i]]++;
   for(auto u : con){
     cout << u.first << " " << u.second << endl;

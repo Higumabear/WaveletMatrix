@@ -18,8 +18,8 @@ int simpleselect(vector<bool> &v, int c, bool bit){
 
 
 int main(int argc, char **argv){
-  if(argc != 2) return 0;
-  int NUM = atoi(argv[1]);
+  // if(argc != 2) return 0;
+  // int NUM = atoi(argv[1]);
   //NUM = 1000;
 
   /*
@@ -71,12 +71,14 @@ int main(int argc, char **argv){
     if(cnt != sbvcnt){
       cout << "cnt : " << cnt
       << "   sbvcnt : " << sbvcnt
+      << "  diff : " << cnt - sbvcnt 
       << "   rank test val : " << ranktest << endl;
     }
     if(sel != sbvsel){
-      cout << "sel : " << sel
-      << "   sbvsel : " << sbvsel
-      << "   select test val : " << selecttest << endl;
+      cout << "foolsel : " << sel
+	   << "   sbvsel : " << sbvsel
+	   << "   diff : " << sel - sbvsel
+	   << "   select test val : " << selecttest << endl;
     }
   }
 #endif
